@@ -37,3 +37,8 @@ jobs:
 
       - name: Pint, PHPStan, Pest
         run: composer check
+
+      - name: Example, billing and orders as two applications
+        run: |
+          command -v redis-cli > /dev/null || sudo apt-get install -y redis-tools > /dev/null
+          examples/run.sh

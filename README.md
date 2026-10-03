@@ -180,6 +180,7 @@ A copy created after the source had data is filled with `microservices:shadows:w
 | [Copies](docs/shadows.md) | `ShadowSource`, `ShadowModel`, filling a new copy |
 | [Services in other languages](docs/other-languages.md) | what a Node or Go service has to speak |
 | [Configuration](docs/configuration.md) | every key, and how to run several services in one process |
+| [Example](examples/README.md) | billing and orders as two applications, with their foundation, run in CI |
 
 ## Extending
 
