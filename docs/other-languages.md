@@ -39,7 +39,7 @@ X-Rpc-Nonce:     <a fresh UUID>        accepted once
 X-Rpc-Context:   {"trace_id":"…"}      the propagated Context keys, as JSON; {} when none
 X-Rpc-Signature: hex(hmac_sha256(secret, timestamp + "\n" + nonce + "\n" + path + "\n" + body + "\n" + context))
 
-{"contract": "Billing\\Contracts\\BillingService", "arguments": {"orderId": 42}}
+{"contract": "Foundation\\Billing\\Contracts\\BillingService", "arguments": {"orderId": 42}}
 ```
 
 `path` is `/{service}/rpc/{method}`, with its leading slash. `body` and `context` are signed as sent,

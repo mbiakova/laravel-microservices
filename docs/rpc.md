@@ -9,24 +9,24 @@ need the result, announce an event instead.
 
 | Piece | Lives | Role |
 |---|---|---|
-| the contract | where both services can read it (a shared package, a shared folder) | the methods the service answers |
+| the contract | in the foundation, the package every service requires | the methods the service answers |
 | the `RpcService` | next to the contract, in the namespace declared for the service | what callers are given: it carries each call |
 | the implementation | in the answering service | the code that runs, on its own data |
 
 ```php
 // config/microservices.php, in orders
-'services' => ['billing' => ['host' => 'https://billing.internal', 'namespace' => 'Billing']],
+'services' => ['billing' => ['host' => 'https://billing.internal', 'namespace' => 'Foundation\Billing']],
 
 // app/Providers/ServicesProvider.php, in orders: the contracts it calls
-protected array $rpc = [\Billing\Contracts\BillingService::class => \Billing\Services\BillingRpcService::class];
+protected array $rpc = [\Foundation\Billing\Contracts\BillingService::class => \Foundation\Billing\Services\BillingRpcService::class];
 
 // app/Providers/ServicesProvider.php, in billing: the contracts it answers
-protected array $services = [\Billing\Contracts\BillingService::class => \App\Services\BillingService::class];
+protected array $services = [\Foundation\Billing\Contracts\BillingService::class => \App\Services\BillingService::class];
 ```
 
 Both providers extend `Microservices\Providers\RpcServiceProvider`. The `RpcService` finds the
-service it calls from its namespace: `Billing\Services\BillingRpcService` is under `Billing`, the
-namespace of `billing`.
+service it calls from its namespace: `Foundation\Billing\Services\BillingRpcService` is under
+`Foundation\Billing`, the namespace of `billing`.
 
 ## The path of a call
 

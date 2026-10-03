@@ -32,25 +32,50 @@ Name the application, and declare the services it talks to:
 'name' => env('MICROSERVICES_NAME'),   // orders
 
 'services' => [
-    'billing' => ['host' => env('BILLING_HOST'), 'namespace' => 'Billing'],
+    'billing' => ['host' => env('BILLING_HOST'), 'namespace' => 'Foundation\Billing'],
 ],
 ```
 
-`host` is where a service answers RPC calls. `namespace` is where its contracts and its
-`RpcService` live in this codebase, often a small package the two services share.
+`host` is where a service answers RPC calls. `namespace` is where it shares its code with the
+others, in the foundation.
+
+## The foundation
+
+Two applications that call each other through an interface both need that interface. It lives in
+a Composer package every service requires, the foundation, with one folder per service:
+
+```
+foundation/                    your package, e.g. acme/foundation
+└── src/
+    ├── Billing/               Foundation\Billing\, what billing shares
+    │   ├── Contracts/         the interfaces billing answers
+    │   ├── Services/          their RpcService, used by the callers
+    │   ├── Payloads/          the versions of billing's events, once one changes shape
+    │   └── Shadows/           the copies other services may keep of billing's tables
+    └── Orders/
+billing/   orders/             the applications: each requires the foundation
+```
+
+```bash
+php artisan microservices:foundation ../foundation --package=acme/foundation   # in billing: creates it, adds src/Billing
+php artisan microservices:foundation ../foundation                             # in orders: adds src/Orders
+```
+
+A service's implementation, models and migrations stay in its application. A new version of the
+foundation reaches each service when it updates it; versioned payloads let them do it one at a time.
 
 ## Calling another service
 
 The service that answers owns a contract. The caller gets an `RpcService` that implements it:
 
 ```php
-// Billing\Contracts\BillingService, shared by orders and billing
+// Foundation\Billing\Contracts\BillingService, in the foundation
 interface BillingService
 {
     public function invoiceFor(int $orderId): ?array;
 }
 
-// Billing\Services\BillingRpcService, on the caller's side
+// Foundation\Billing\Services\BillingRpcService, in the foundation, used by the callers
 final class BillingRpcService extends \Microservices\Services\Rpc\RpcService implements BillingService
 {
     public function invoiceFor(int $orderId): ?array
@@ -81,6 +106,8 @@ final class OrderPlaced extends \Microservices\Events\Event
     public function name(): string { return 'orders.order.placed'; }
 
     public function payload(): array { return ['id' => $this->id]; }
+
+    public function version(): int { return 1; }   // raised when the shape of the payload changes
 }
 
 app(\Microservices\Contracts\Stream\Bus::class)->emit(new OrderPlaced($order->id));
@@ -101,6 +128,9 @@ See [Events](docs/events.md) for the outbox, versions, streams and transports.
 
 ## Keeping a copy of another service's rows
 
+A service that needs to join, filter or sort on another service's rows keeps the columns it needs
+in its own database. Only the owner writes them: the copy follows its events and refuses any other write.
+
 ```php
 // in billing: the source, announced on every write
 final class Customer extends Model implements \Microservices\Contracts\Shadows\Shadowed
@@ -110,16 +140,36 @@ final class Customer extends Model implements \Microservices\Contracts\Shadows\S
     protected array $shadowed = ['name'];
 }
 
-// in orders: the copy, in the orders_customers table
-final class CustomerShadow extends \Microservices\Models\ShadowModel
+// in the foundation: the copy as billing describes it
+namespace Foundation\Billing\Shadows;
+
+abstract class CustomerShadow extends \Microservices\Models\ShadowModel
 {
     public static function owner(): string { return 'billing'; }
 
     public static function sourceTable(): string { return 'customers'; }
 }
+
+// in orders: its copy, in the orders_customers table
+final class Customer extends \Foundation\Billing\Shadows\CustomerShadow {}
+
+// in orders: the migration of that table
+return new class extends \Microservices\Migrations\ShadowMigration
+{
+    protected function source(): string { return 'customers'; }
+
+    public function up(): void
+    {
+        Schema::create($this->table(), function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->primary();   // the source's key
+            $table->string('name');
+            $table->softDeletes();
+        });
+    }
+};
 ```
 
-See [Copies](docs/shadows.md).
+A copy created after the source had data is filled with `microservices:shadows:want`. See [Copies](docs/shadows.md).
 
 ## Documentation
 

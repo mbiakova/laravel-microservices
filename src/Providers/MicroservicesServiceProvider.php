@@ -12,6 +12,7 @@ use Microservices\Console\Commands\AnnounceShadows;
 use Microservices\Console\Commands\ConsumeEvents;
 use Microservices\Console\Commands\ExportEvents;
 use Microservices\Console\Commands\ImportEvents;
+use Microservices\Console\Commands\MakeFoundation;
 use Microservices\Console\Commands\PublishEvents;
 use Microservices\Console\Commands\RepublishEvents;
 use Microservices\Console\Commands\TrimEvents;
@@ -79,7 +80,7 @@ final class MicroservicesServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 PublishEvents::class, RepublishEvents::class, ConsumeEvents::class, TrimEvents::class,
-                ExportEvents::class, ImportEvents::class, AnnounceShadows::class, WantShadows::class,
+                ExportEvents::class, ImportEvents::class, AnnounceShadows::class, WantShadows::class, MakeFoundation::class,
             ]);
         }
     }
