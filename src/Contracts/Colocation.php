@@ -8,7 +8,7 @@ use Closure;
 
 /**
  * Which services this process runs, and what each one owns in it. An application is one service
- * (SingleService); a package that runs several in one process, laravel-modulith, binds its own.
+ * (SingleService); a package that runs several in one process, laravel-distributable, binds its own.
  */
 interface Colocation
 {

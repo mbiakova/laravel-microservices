@@ -45,7 +45,7 @@ it. Only a method declared on a contract of `$services` can be called.
 
 `Contracts\Rpc\RpcTransport` is what an `RpcService` is given, bound to `RpcTransportManager`. A
 package that runs several services in one process binds its own, to call `LocalServices` directly
-when the service runs here: laravel-modulith does, so a call between two modules of one process is
+when the service runs here: laravel-distributable does, so a call between two modules of one process is
 a plain method call.
 
 ## The called side
