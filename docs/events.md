@@ -173,3 +173,6 @@ delivered again, the row is already there and the handler doesn't run. If the ha
 row is rolled back and the event is retried. The guard is enabled automatically with the outbox or
 with a transport that implements `Contracts\Stream\RedeliversEnvelopes` (`redis` and `queue` do).
 A handler that is already idempotent can implement `Contracts\Stream\Idempotent` to skip it.
+
+The transaction stays open for the whole handler, so a guarded handler calls other services before
+it writes: its rows are not locked while it waits on the network.
