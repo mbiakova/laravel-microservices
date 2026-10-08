@@ -47,7 +47,7 @@ An application is one service. A package that runs several services in one proce
 | `connection($service)` | the database connection of a service, for its outbox, its consumption marks and its copies |
 | `classPath($service)` | the directory searched for its copies and their sources |
 
-[laravel-distributable](https://github.com/mk-josias/laravel-distributable) binds it so that each module is a
+[laravel-distributable](https://github.com/mbiakova/laravel-distributable) binds it so that each module is a
 service, with its own database.
 
 ## Source layout

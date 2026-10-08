@@ -1,5 +1,5 @@
 {
-    "name": "mk-josias/laravel-microservices",
+    "name": "mbiakova/laravel-microservices",
     "description": "Laravel apps as microservices: signed RPC through contracts, ordered events with an outbox, and read-only copies of another service's rows.",
     "license": "MIT",
     "type": "library",

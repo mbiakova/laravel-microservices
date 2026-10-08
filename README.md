@@ -13,14 +13,14 @@ outbox, and read-only copies of each other's rows. It depends on nothing but Lar
 - **Any broker, any language.** Redis Streams and Laravel queues are built in; another broker plugs
   in through one interface. The wire format is plain JSON, so a service in Node or Go can take part.
 
-[laravel-distributable](https://github.com/mk-josias/laravel-distributable) builds on this package to run
+[laravel-distributable](https://github.com/mbiakova/laravel-distributable) builds on this package to run
 several services as modules of one codebase. Whether a service is its own application or a module
 is a deployment choice; the code that calls it, announces to it or copies its rows is the same.
 
 ## Installation
 
 ```bash
-composer require mk-josias/laravel-microservices
+composer require mbiakova/laravel-microservices
 php artisan vendor:publish --tag=microservices-config
 php artisan migrate   # the outbox tables: event_publications, event_consumptions
 ```

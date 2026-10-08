@@ -37,7 +37,7 @@ final class MakeFoundation extends Command
                 'name' => $package,
                 'description' => 'What each service shares with the others: contracts, RPC clients, event payloads, copies.',
                 'type' => 'library',
-                'require' => ['mk-josias/laravel-microservices' => '^0.1'],
+                'require' => ['mbiakova/laravel-microservices' => '^0.1'],
                 'autoload' => ['psr-4' => ['Foundation\\' => 'src/']],
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
         } else {
