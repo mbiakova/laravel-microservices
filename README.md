@@ -13,7 +13,7 @@ outbox, and read-only copies of each other's rows. It depends on nothing but Lar
 - **Any broker, any language.** Redis Streams and Laravel queues are built in; another broker plugs
   in through one interface. The wire format is plain JSON, so a service in Node or Go can take part.
 
-[laravel-distributable](https://github.com/mbiakova/laravel-distributable) builds on this package to run
+[laravel-distributable-modules](https://github.com/mbiakova/laravel-distributable-modules) builds on this package to run
 several services as modules of one codebase. Whether a service is its own application or a module
 is a deployment choice; the code that calls it, announces to it or copies its rows is the same.
 
@@ -188,7 +188,7 @@ A copy created after the source had data is filled with `microservices:shadows:w
 |---|---|---|
 | carry events on Kafka, RabbitMQ, another package | `Contracts\Stream\Transport` | `TransportManager::extend()` |
 | carry calls on gRPC, an existing REST API | `Contracts\Rpc\RpcTransport` | `RpcTransportManager::extend()` |
-| run several services in one process | `Contracts\Colocation` | the container (laravel-distributable does) |
+| run several services in one process | `Contracts\Colocation` | the container (laravel-distributable-modules does) |
 
 ## License
 
