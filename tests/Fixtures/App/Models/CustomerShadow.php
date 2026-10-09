@@ -6,7 +6,7 @@ namespace Microservices\Tests\Fixtures\App\Models;
 
 use Microservices\Models\ShadowModel;
 
-/** Billing's customers, as orders keeps them: the table orders_customers. */
+/** Billing's customers, as orders keeps them: the table customers. */
 final class CustomerShadow extends ShadowModel
 {
     public static function owner(): string

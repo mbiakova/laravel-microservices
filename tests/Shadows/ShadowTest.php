@@ -19,8 +19,8 @@ it('keeps a copy of the rows another service announces, in a table named after t
     app(Dispatcher::class)->dispatch(customerChanged(3, ['name' => 'Ada']), 'orders');
     app(Dispatcher::class)->dispatch(customerChanged(3, ['name' => 'Grace']), 'orders');
 
-    expect((new CustomerShadow)->getTable())->toBe('orders_customers')
-        ->and(DB::table('orders_customers')->get()->map(fn ($row): array => (array) $row)->all())
+    expect((new CustomerShadow)->getTable())->toBe('customers')
+        ->and(DB::table('customers')->get()->map(fn ($row): array => (array) $row)->all())
         ->toBe([['id' => 3, 'name' => 'Grace', 'deleted_at' => null]]);
 });
 

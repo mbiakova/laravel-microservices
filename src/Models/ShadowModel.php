@@ -12,7 +12,7 @@ use Microservices\Exceptions\ServiceException;
 /**
  * A local, read-only copy of another service's rows: same key as the source row, soft-deleted
  * when the source is, written only through sync(). Each service keeping a copy declares it once,
- * so the copy is a table of the keeper's database, named {keeper}_{source table}.
+ * so the copy is a table of the keeper's database, named after its source table unless the keeper sets $table.
  *
  * @phpstan-consistent-constructor
  */
@@ -47,9 +47,10 @@ abstract class ShadowModel extends Model
         return app(Colocation::class)->connection(static::keeper());
     }
 
+    /** The source's own name, in the keeper's database; a keeper sharing its database with the owner sets $table. */
     public function getTable(): string
     {
-        return static::keeper().'_'.static::sourceTable();
+        return $this->table ?? static::sourceTable();
     }
 
     protected static function boot(): void

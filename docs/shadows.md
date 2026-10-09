@@ -26,7 +26,7 @@ final class Customer extends \Foundation\Billing\Shadows\CustomerShadow {}
 ```
 
 The keeper creates the copy's table with a migration extending
-`Microservices\Migrations\ShadowMigration`, whose `table()` is `{keeper}_{source}`. The copy has
+`Microservices\Migrations\ShadowMigration`, whose `table()` is the name the keeper's copy model reads: the source's own, or its `$table`. The copy has
 the source's key as its own, the shadowed columns and a `deleted_at`:
 
 ```php
